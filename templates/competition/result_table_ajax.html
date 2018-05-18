@@ -1,0 +1,35 @@
+{% load auth_extras %}
+<table>
+    {% for row in table %}
+    <tr>
+        {% if forloop.counter0 == 0 %}
+            {% for column in row %}
+                <th>{{ column }}</th>
+            {% endfor %}
+        {% else %}
+            {% for column in row %}
+                {% if user.is_authenticated %}
+                    {% if user|has_group:"Lecturer" %}
+                        {% if forloop.counter0 == 1 %}
+                        <td><form action="{% url 'competition:competition-remove-student' competition_pk|default:request.GET.competition_pk %}" method="post" style="display: inline; align-content: left">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </form>
+                        {% elif forloop.counter0 == 2 %}
+                        {{ column }}</td>
+                        {% else %}
+                        <td>{{ column }}</td>
+                        {% endif %}
+                    {% else %}
+                        {% if forloop.counter0 != 1 %}
+                        <td>{{ column }}</td>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>

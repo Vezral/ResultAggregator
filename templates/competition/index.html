@@ -1,0 +1,71 @@
+{% extends 'generic/base.html' %}
+{% load auth_extras %}
+{% block body %}
+    {% if user.is_authenticated %}
+        {% if user|has_group:"Lecturer" %}
+        <form action="{% url 'competition:competition-add' %}" method="get" style="display: inline;">
+            {% csrf_token %}
+            <label>Add Competition: </label>
+            <button type="submit" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </form>
+        {% endif %}
+    {% endif %}
+    {% if competition_list %}
+        <h2>Competition List:</h2>
+        <ul>
+            {% for competition in competition_list reversed %}
+                <li>
+                {% if user.is_authenticated %}
+                    {% if user|has_group:"Lecturer" %}
+                        {% if competition.is_archived %}
+                        <label style="background-color: grey">#{{ competition.id }}
+                        <a href="{% url 'competition:competition-details' competition.id %}">{{ competition.name }}</a></label>
+                        {% else %}
+                        <label>#{{ competition.id }}
+                        <a href="{% url 'competition:competition-details' competition.id %}">{{ competition.name }}</a></label>
+                        {% endif %}
+                        {% if competition.is_active == False %}
+                        <form action="{% url 'competition:competition-update' competition.id %}" method="get" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                        </form>
+                        <form action="{% url 'competition:competition-delete' competition.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </form>
+                        {% endif %}
+                        {% if competition.is_active == False %}
+                            {% if competition.is_archived == False %}
+                            <a href="{% url 'competition:competition-change-archive-status' competition.id %}">Archive Competition</a></label>
+                            {% else %}
+                            <a href="{% url 'competition:competition-change-archive-status' competition.id %}">Restore Competition</a></label>
+                            {% endif %}
+                        {% else %}
+                            <label>Ongoing competition!</label>
+                        {% endif %}
+                    {% endif %}
+                    {% if user|has_group:"Student" %}
+                        {% if competition.is_archived == False %}
+                            {% if competition not in user.student.competition.all %}
+                                <label>#{{ competition.id }} {{ competition.name }}
+                                <a href="{% url 'competition:competition-join' competition.id %}">Join Competition!</a></label>
+                            {% else %}
+                                <label>#{{ competition.id }}
+                                <a href="{% url 'competition:competition-details' competition.id %}"> {{ competition.name }}</a> Joined competition!</label>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>You don't have any Competition added yet</h2>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'generic/base.html' %}
+{% load staticfiles %}
+{% block additional_header %}
+    <style>
+        table {
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            text-align: center;
+        }
+        td:nth-child(2) {
+            text-align: left;
+        }
+    </style>
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+{% endblock %}
+
+{% block question_home %} <a href="{% url 'competition:competition-details' competition_pk %}">Question List</a><br> {% endblock %}
+
+{% block body %}
+    <div id="result_table">
+    {% if not debug %}
+    {% include 'competition/result_table_ajax.html' with competition_pk=competition_pk %}
+    {% endif %}
+    </div>
+
+    <script>
+        setInterval(function(){
+            {% if debug %}
+            alert('This alert is automatically disabled if DEBUG is set to FALSE');
+            {% endif %}
+            $.ajax({
+                url: '{% url 'competition:competition-generate-result-ajax' competition_pk %}',
+                data:{
+                  competition_pk: {{ competition_pk }},
+                },
+                success: function(data) {
+                    $('#result_table').html(data);
+                },
+            })
+        }, 1000 * 5);
+    </script>
+{% endblock %}

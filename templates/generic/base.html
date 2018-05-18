@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Quiz{% endblock %}</title>
+    {% load staticfiles %}
+    {% load auth_extras %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    {% block additional_header %} {% endblock %}
+</head>
+
+<body>
+{% if user.is_authenticated %}
+    Hi, {{ user.username }}!
+    <a href="{% url 'user:logout' %}">logout</a><br>
+    {% if user|has_group:"Lecturer" %}
+    <a href="{% url 'user:lecturer-list' %}">Lecturer List</a><br>
+    {% endif %}
+    <a href="{% url 'competition:competition-index' %}">Home</a><br>
+    {% block question_home %} {% endblock %}
+{% endif %}
+
+{% block body %}
+{% endblock %}
+</body>

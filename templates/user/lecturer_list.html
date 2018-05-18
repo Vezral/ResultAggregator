@@ -1,0 +1,28 @@
+{% extends 'generic/base.html' %}
+
+{% block body %}
+    <form action="{% url 'lecturer-register' %}" method="get" style="display: inline;">
+        {% csrf_token %}
+        <label>Add Lecturer: </label>
+        <button type="submit" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </form>
+
+    <h2>Lecturer List:</h2>
+    {% if lecturer_list %}
+        <ul>
+            {% for lecturer in lecturer_list %}
+                <li>{{ lecturer.username }}
+                <form action="{% url 'lecturer-delete' lecturer.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="lecturer_id" value="{{ lecturer.id }}"/>
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

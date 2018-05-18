@@ -1,0 +1,8 @@
+<form action="" method="post" enctype="multipart/form-data" role="form">
+    {% csrf_token %}
+    <legend>Add Question</legend>
+
+    {% include 'generic/form-template.html' %}
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
