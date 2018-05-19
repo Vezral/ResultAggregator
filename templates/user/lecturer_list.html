@@ -1,7 +1,7 @@
 {% extends 'generic/base.html' %}
 
 {% block body %}
-    <form action="{% url 'lecturer-register' %}" method="get" style="display: inline;">
+    <form action="{% url 'user:lecturer-register' %}" method="get" style="display: inline;">
         {% csrf_token %}
         <label>Add Lecturer: </label>
         <button type="submit" class="btn btn-default btn-sm">
@@ -11,10 +11,10 @@
 
     <h2>Lecturer List:</h2>
     {% if lecturer_list %}
-        <ul>
+        <ol>
             {% for lecturer in lecturer_list %}
                 <li>{{ lecturer.username }}
-                <form action="{% url 'lecturer-delete' lecturer.id %}" method="post" style="display: inline;">
+                <form action="{% url 'user:lecturer-delete' lecturer.id %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <input type="hidden" name="lecturer_id" value="{{ lecturer.id }}"/>
                     <button type="submit" class="btn btn-default btn-sm">
@@ -23,6 +23,6 @@
                 </form>
                 </li>
             {% endfor %}
-        </ul>
+        </ol>
     {% endif %}
 {% endblock %}

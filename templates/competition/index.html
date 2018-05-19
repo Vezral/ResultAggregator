@@ -16,9 +16,9 @@
         <h2>Competition List:</h2>
         <ul>
             {% for competition in competition_list reversed %}
-                <li>
                 {% if user.is_authenticated %}
                     {% if user|has_group:"Lecturer" %}
+                    <li>
                         {% if competition.is_archived %}
                         <label style="background-color: grey">#{{ competition.id }}
                         <a href="{% url 'competition:competition-details' competition.id %}">{{ competition.name }}</a></label>
@@ -49,9 +49,11 @@
                         {% else %}
                             <label>Ongoing competition!</label>
                         {% endif %}
+                    </li>
                     {% endif %}
                     {% if user|has_group:"Student" %}
                         {% if competition.is_archived == False %}
+                        <li>
                             {% if competition not in user.student.competition.all %}
                                 <label>#{{ competition.id }} {{ competition.name }}
                                 <a href="{% url 'competition:competition-join' competition.id %}">Join Competition!</a></label>
@@ -59,13 +61,15 @@
                                 <label>#{{ competition.id }}
                                 <a href="{% url 'competition:competition-details' competition.id %}"> {{ competition.name }}</a> Joined competition!</label>
                             {% endif %}
+                        </li>
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                </li>
             {% endfor %}
         </ul>
     {% else %}
+        {% if user|has_group:"Lecturer" %}
         <h2>You don't have any Competition added yet</h2>
+        {% endif %}
     {% endif %}
 {% endblock %}

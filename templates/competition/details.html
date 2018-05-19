@@ -29,7 +29,7 @@
     {% endif %}
     {% if competition.question_set %}
         <h2>Question List:</h2>
-        <ul>
+        <ol>
             {% for question in competition.question_set.all %}
                 <li><a href="{% url 'competition:question:question-details' competition.id question.id %}">{{ question.name }}</a>
                 {% if user.is_authenticated %}
@@ -53,7 +53,7 @@
                 {% endif %}
                 </li>
             {% endfor %}
-        </ul>
+        </ol>
     {% else %}
         <h2>You don't have any Question</h2>
     {% endif %}

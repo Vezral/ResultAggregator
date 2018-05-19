@@ -103,9 +103,10 @@ def join_competition(request, **kwargs):
 
 def remove_student_from_competition(request, **kwargs):
     if request.method == 'POST':
-        student = Student.objects.get(pk=kwargs['student_pk'])
-        student.competition.remove(student)
-        return redirect('competition:competition-generate-result')
+        student = Student.objects.get(pk=request.POST['student_id'])
+        competition = Competition.objects.get(pk=kwargs['competition_pk'])
+        student.competition.remove(competition)
+        return redirect('competition:competition-generate-result', competition_pk=competition.id)
 
 
 def generate_result_table_ajax(request, **kwargs):

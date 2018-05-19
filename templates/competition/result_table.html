@@ -22,16 +22,13 @@
 
 {% block body %}
     <div id="result_table">
-    {% if not debug %}
-    {% include 'competition/result_table_ajax.html' with competition_pk=competition_pk %}
-    {% endif %}
     </div>
 
     <script>
-        setInterval(function(){
-            {% if debug %}
-            alert('This alert is automatically disabled if DEBUG is set to FALSE');
-            {% endif %}
+        getResultTable();
+        setInterval(getResultTable, 1000 * 5);
+
+        function getResultTable(){
             $.ajax({
                 url: '{% url 'competition:competition-generate-result-ajax' competition_pk %}',
                 data:{
@@ -41,6 +38,6 @@
                     $('#result_table').html(data);
                 },
             })
-        }, 1000 * 5);
+        }
     </script>
 {% endblock %}

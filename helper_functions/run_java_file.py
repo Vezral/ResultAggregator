@@ -1,4 +1,3 @@
-import re
 import subprocess
 import os
 import time
@@ -36,7 +35,7 @@ def modify_java_file(django_source_code_path, source_code_name):
 def compile_java(django_source_code_path, source_code_name):
     modify_java_file(django_source_code_path, source_code_name)
     cmd = "javac " + django_source_code_path
-    subprocess.run(cmd)
+    subprocess.run(cmd, shell=True)
 
     program_path = os.path.splitext(django_source_code_path)[0]
     return program_path

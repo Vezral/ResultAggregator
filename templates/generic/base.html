@@ -14,7 +14,7 @@
 {% if user.is_authenticated %}
     Hi, {{ user.username }}!
     <a href="{% url 'user:logout' %}">logout</a><br>
-    {% if user|has_group:"Lecturer" %}
+    {% if user|has_group:"Lecturer" or user.is_superuser %}
     <a href="{% url 'user:lecturer-list' %}">Lecturer List</a><br>
     {% endif %}
     <a href="{% url 'competition:competition-index' %}">Home</a><br>

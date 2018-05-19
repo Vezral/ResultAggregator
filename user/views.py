@@ -28,7 +28,7 @@ class LecturerRegister(CreateView):
             new_group.save()
             group = new_group
         group.user_set.add(self.object)
-        return reverse('lecturer-list')
+        return reverse('user:lecturer-list')
 
 
 def lecturer_delete(request, **kwargs):
@@ -36,7 +36,7 @@ def lecturer_delete(request, **kwargs):
         lecturer = User.objects.get(pk=kwargs['lecturer_pk'])
         lecturer.is_active = False
         lecturer.save()
-        return redirect('lecturer-list')
+        return redirect('user:lecturer-list')
 
 
 class StudentRegister(CreateView):
