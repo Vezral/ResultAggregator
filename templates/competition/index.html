@@ -1,6 +1,8 @@
 {% extends 'generic/base.html' %}
 {% load auth_extras %}
+{% comment %} template to show list of competition {% endcomment %}
 {% block body %}
+    {% comment %} lecturer can add competition {% endcomment %}
     {% if user.is_authenticated %}
         {% if user|has_group:"Lecturer" %}
         <form action="{% url 'competition:competition-add' %}" method="get" style="display: inline;">
@@ -12,13 +14,15 @@
         </form>
         {% endif %}
     {% endif %}
-    {% if competition_list %}
+    {% if competition_list and user.is_superuser == False %}
         <h2>Competition List:</h2>
         <ul>
+            {% comment %} allow lecturer to update / delete / archive competition {% endcomment %}
             {% for competition in competition_list reversed %}
                 {% if user.is_authenticated %}
                     {% if user|has_group:"Lecturer" %}
                     <li>
+                        {% comment %} archived competition is greyed out {% endcomment %}
                         {% if competition.is_archived %}
                         <label style="background-color: grey">#{{ competition.id }}
                         <a href="{% url 'competition:competition-details' competition.id %}">{{ competition.name }}</a></label>
@@ -40,6 +44,7 @@
                             </button>
                         </form>
                         {% endif %}
+                        {% comment %} only allow archiving if competition is not in progress {% endcomment %}
                         {% if competition.is_active == False %}
                             {% if competition.is_archived == False %}
                             <a href="{% url 'competition:competition-change-archive-status' competition.id %}">Archive Competition</a></label>
@@ -51,6 +56,7 @@
                         {% endif %}
                     </li>
                     {% endif %}
+                    {% comment %} student can only join unarchived competition {% endcomment %}
                     {% if user|has_group:"Student" %}
                         {% if competition.is_archived == False %}
                         <li>

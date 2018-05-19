@@ -1,13 +1,14 @@
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from competition.models import Competition
+from .models import Question, QuestionFile
+from user.models import Student
+from student_answer.models import StudentAnswer
 from django.urls import reverse
 from helper_functions.file_management import trim_text_file
-from .models import Question, QuestionFile
-from student_answer.models import StudentAnswer
-from user.models import Student
-from competition.models import Competition
 
 
+# list question_files and submitted answer_files
 class DetailsView(DetailView):
     model = Question
     template_name = 'question/details.html'

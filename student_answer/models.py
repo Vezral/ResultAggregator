@@ -1,15 +1,12 @@
+from django.db import models
 from django.contrib.auth.models import User
 from competition.models import Competition
 from question.models import Question
-from django.db import models
-from datetime import timezone
+from user.models import Student
 import os
 
 
-# Determine the upload_directory for uploaded student_answer file (including answer) in MEDIA_ROOT
-from user.models import Student
-
-
+# determine the upload_directory for uploaded student_answer file (including answer) in MEDIA_ROOT
 def upload_directory(instance, filename):
     path = os.path.join(str(instance.question.competition.id), str(instance.question.id))
     path = os.path.join(path, filename)
@@ -28,13 +25,8 @@ class StudentAnswer(models.Model):
         file = open(self.answer_file.path, 'r')
         return file.read()
 
-    def get_submission_time(self):
-        # convert to local timezone from default UTC
-        submission_time = self.submission_time.replace(tzinfo=timezone.utc).astimezone(tz=None)
-        return submission_time.strftime('X%d/X%m/%Y X%I:%M %p').replace('X0', 'X').replace('X', '')
-
     def __str__(self):
-        return '{} {} {} {}'.format(str(self.pk), self.student.user.username, self.answer_file.path, self.get_submission_time())
+        return '{} {} {} {}'.format(str(self.pk), self.student.user.username, self.answer_file.path, self.submission_time)
 
 
 class StudentAnswerResult(models.Model):

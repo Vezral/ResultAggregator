@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 
 register = template.Library()
 
+# custom template function to check if user is in a certain group and return boolean
 @register.filter(name='has_group')
 def has_group(user, group_name):
     try:

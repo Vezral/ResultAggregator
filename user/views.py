@@ -1,13 +1,14 @@
-from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import redirect
-from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login
+from django.shortcuts import redirect
+from django.urls import reverse
 from .models import Student
 
 
+# list of lecturer
 class LecturerList(ListView):
     template_name = 'user/lecturer_list.html'
     context_object_name = 'lecturer_list'
@@ -16,6 +17,7 @@ class LecturerList(ListView):
         return User.objects.all().filter(groups__name='Lecturer', is_active=True).exclude(pk=1)
 
 
+# add new lecturer, create Lecturer group if it doesn't exist
 class LecturerRegister(CreateView):
     form_class = UserCreationForm
     template_name = 'user/lecturer_register.html'
@@ -39,6 +41,7 @@ def lecturer_delete(request, **kwargs):
         return redirect('user:lecturer-list')
 
 
+# add new student, create Student group if it doesn't exist
 class StudentRegister(CreateView):
     form_class = UserCreationForm
     template_name = 'user/student_register.html'

@@ -1,5 +1,6 @@
 {% extends 'generic/base.html' %}
 {% load staticfiles %}
+{% comment %} template to display competition result table with ranking {% endcomment %}
 {% block additional_header %}
     <style>
         table {
@@ -25,9 +26,11 @@
     </div>
 
     <script>
+        {% comment %} run function once on load, then set to run every 5 second (1000ms * 5) {% endcomment %}
         getResultTable();
         setInterval(getResultTable, 1000 * 5);
 
+        {% comment %} ajax script to call function to retrieve new result table {% endcomment %}
         function getResultTable(){
             $.ajax({
                 url: '{% url 'competition:competition-generate-result-ajax' competition_pk %}',

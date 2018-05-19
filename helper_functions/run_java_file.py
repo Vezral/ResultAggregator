@@ -25,13 +25,14 @@ def modify_java_file(django_source_code_path, source_code_name):
         fd.truncate()
         for line in code:
             if not line.startswith("package"):
+                # if django renamed the program, rename the public class
                 if is_duplicate:
                     if 'public class ' + program_name in line:
                         line = line.replace(program_name, django_program_name)
                 fd.write(line)
 
 
-# compile the .java file in MEDIA_ROOT/competition/question
+# compile the .java file in MEDIA_ROOT/competition/question and return the compiled program
 def compile_java(django_source_code_path, source_code_name):
     modify_java_file(django_source_code_path, source_code_name)
     cmd = "javac " + django_source_code_path
@@ -63,6 +64,7 @@ def run_java_program(student_answer_pk, source_code_name):
     program_path = compile_java(student_answer.answer_file.path, source_code_name)
     input_file_list = student_answer.question.questionfile_set.all()
     correct_count = 0
+    # run the program for each input_file in question and check if it's correct by comparing answer file
     for input_file in input_file_list:
         result_file_path = execute_java(program_path, input_file.question_file.path, input_file.question_file.name)
         is_correct = filecmp.cmp(result_file_path, input_file.answer_file.path)
@@ -71,6 +73,7 @@ def run_java_program(student_answer_pk, source_code_name):
         student_answer_result = StudentAnswerResult(student_answer=student_answer, result_file=result_file_path, is_correct=is_correct)
         student_answer_result.save()
 
+    # remove compiled program after execution
     java_exec_path = program_path + '.class'
     if os.path.exists(java_exec_path):
         os.remove(java_exec_path)

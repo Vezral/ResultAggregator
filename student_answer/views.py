@@ -1,8 +1,8 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse
 from question.models import Question
-from .models import StudentAnswer, StudentAnswerResult
 from user.models import Student
+from .models import StudentAnswer, StudentAnswerResult
+from django.urls import reverse
 from helper_functions.run_java_file import run_java_program
 
 

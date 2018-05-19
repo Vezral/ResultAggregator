@@ -1,4 +1,5 @@
 {% load auth_extras %}
+{% comment %} template to format the actual table {% endcomment %}
 <table>
     {% for row in table %}
     <tr>
@@ -8,17 +9,18 @@
             {% endfor %}
         {% else %}
             {% for column in row %}
+                {% comment %} add delete option for lecturer {% endcomment %}
                 {% if user.is_authenticated %}
                     {% if user|has_group:"Lecturer" %}
-                        {% if forloop.counter0 == 1 %}
-                        <td><form action="{% url 'competition:competition-remove-student' competition_pk|default:request.GET.competition_pk %}" method="post" style="display: inline; align-content: left">
-                            {% csrf_token %}
-                            <input type="hidden" name="student_id" value="{{ column }}"/>
-                            <button type="submit" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </button>
-                        </form>
-                        {% elif forloop.counter0 == 2 %}
+                        {% if forloop.counter0 == 1 and column != '--' %}
+                            <td><form action="{% url 'competition:competition-remove-student' competition_pk|default:request.GET.competition_pk %}" method="post" style="display: inline; align-content: left">
+                                {% csrf_token %}
+                                <input type="hidden" name="student_id" value="{{ column }}"/>
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </form>
+                        {% elif forloop.counter0 == 2 and column != '--' %}
                         {{ column }}</td>
                         {% else %}
                         <td>{{ column }}</td>

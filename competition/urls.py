@@ -1,6 +1,6 @@
+from django.views.generic import RedirectView
 from django.urls import path, include, re_path
 from competition.views import *
-from django.views.generic import RedirectView
 
 app_name = 'competition'
 

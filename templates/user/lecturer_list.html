@@ -1,5 +1,5 @@
 {% extends 'generic/base.html' %}
-
+{% comment %} template to list lecturer and allow add / delete {% endcomment %}
 {% block body %}
     <form action="{% url 'user:lecturer-register' %}" method="get" style="display: inline;">
         {% csrf_token %}

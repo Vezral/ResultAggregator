@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import redirect, render
 
 
-# Check redirect
+# if user hasn't login, redirect to homepage
 class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):

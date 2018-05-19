@@ -1,4 +1,4 @@
-# A simple function that strips all extra white spaces from uploaded files
+# a simple function that strips all extra white spaces from uploaded files
 def trim_text_file(input_file_path):
     fd = open(input_file_path, "r+")
     text = fd.read().strip()

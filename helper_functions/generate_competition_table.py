@@ -1,6 +1,8 @@
 from competition.models import Competition
 
 
+# this function will returns a list containing:
+# Rank / Student ID / Name / Solved / Time / <List of questions' Attempts / Solved> / Total Attempt / Solved
 def generate_competition_table(pk):
     competition = Competition.objects.get(pk=pk)
     student_list = competition.student_set.all()
@@ -8,6 +10,7 @@ def generate_competition_table(pk):
     table = []
     result = []
 
+    # prepare header for table
     header = ['Rank', 'Name', 'Solved', 'Time']
     for index, question in enumerate(question_list, start=1):
         if index == 1:
@@ -24,6 +27,7 @@ def generate_competition_table(pk):
         total_solved = 0
         total_time = 0
         question_attempt_result = []
+        # for each question, get the latest student_answer and check if it's correct
         for question in question_list:
             student_answer_list = student.studentanswer_set.filter(question=question).order_by('-submission_time')
             num_of_attempts = student_answer_list.count()
@@ -31,11 +35,13 @@ def generate_competition_table(pk):
             time_taken = None
             if student_answer_list.count() > 0:
                 latest_student_answer = student_answer_list[0]
+                # if correct, +1 to total_solved and calculate time_difference
                 if latest_student_answer.solved:
                     total_solved += 1
                     time_difference = latest_student_answer.submission_time - competition.start_time
-                    time_taken = time_difference.seconds
+                    time_taken = int(time_difference.seconds)  # divide 60 for minutes, etc
                     total_time += time_taken
+            # if the student hasn't submitted an answer, put '--' as placeholder
             if time_taken is None:
                 time_taken = '--'
             question_attempt_result.append('{}/{}'.format(num_of_attempts, time_taken))
@@ -44,11 +50,12 @@ def generate_competition_table(pk):
         student_data.append('{}/{}'.format(total_attempt, total_solved))
         result.append(student_data)
 
-    result = sorted(result, key=lambda x: (-x[2], x[3])) # sort by descending # of solved, then ascending time
+    result = sorted(result, key=lambda x: (-x[2], x[3]))  # sort by descending # of solved, then ascending time
 
+    # formatting the actual table that is returned
     table.append(header)
     for index, student_data in enumerate(result, start=1):
-        formatted_table = [index]
+        formatted_table = [index]  # enumerate index is used to display ranking
         formatted_table += student_data
         table.append(formatted_table)
 

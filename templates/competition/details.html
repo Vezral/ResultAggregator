@@ -1,8 +1,10 @@
 {% extends 'generic/base.html' %}
 {% load auth_extras %}
+{% comment %} template to show list of questions in a competition {% endcomment %}
 {% block body %}
     <label><a href="{% url 'competition:competition-generate-result' competition.id %}">View Competition Result</a></label><br>
     {% if user.is_authenticated %}
+        {% comment %} lecturer can start / restart / stop competition and add question{% endcomment %}
         {% if user|has_group:"Lecturer" %}
             {% if competition.is_active == False %}
             <label><a href="{% url 'competition:competition-start' competition.id %}">Start Competition</a></label>
@@ -27,6 +29,7 @@
             {% endif %}
         {% endif %}
     {% endif %}
+    {% comment %} for each question, add a link to details page. lecturer can update / delete question {% endcomment %}
     {% if competition.question_set %}
         <h2>Question List:</h2>
         <ol>

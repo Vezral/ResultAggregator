@@ -1,10 +1,12 @@
 {% extends 'generic/base.html' %}
 {% load auth_extras %}
+{% comment %} template to display list of question files and uploaded student_answer {% endcomment %}
 {% block title %} Question Details {% endblock %}
 
 {% block question_home %} <a href="{% url 'competition:competition-details' question.competition.id %}">Question List</a><br> {% endblock %}
 
 {% block body %}
+    {% comment %} inform student if they've solved the problem {% endcomment %}
     {% if user.is_authenticated %}
         {% if user|has_group:"Student" %}
             {% if solved == True and question.competition.is_active == True %}
@@ -12,10 +14,12 @@
             {% endif %}
         {% endif %}
     {% endif %}
+    {% comment %} general details on the question {% endcomment %}
     <h1>{{ question.name }}</h1>
     <h3>{{ question.description }}</h3>
     <h4>{{ question.creation_date|date:"j/n/Y h:i A" }}</h4>
 
+    {% comment %} lecturer can add / update / delete question files {% endcomment %}
     {% if user.is_authenticated %}
         {% if user|has_group:"Lecturer" %}
         <h3>Questions:</h3>
@@ -51,6 +55,7 @@
                             </form>
                             {% endif %}
                         {% endif %}
+                        {% comment %} display question and answer file in textarea {% endcomment %}
                         <br>
                         <label><textarea rows="15" cols="50">{{ question_file.get_question_file_text }}</textarea>
                         {% if user|has_group:"Lecturer" %}
@@ -63,6 +68,7 @@
         {% endif %}
     {% endif %}
 
+    {% comment %} student can only submit if they haven't solve the question {% endcomment %}
     <h3>Submitted Answers:</h3>
     {% if user.is_authenticated %}
         {% if user|has_group:"Student" %}
@@ -79,6 +85,7 @@
         {% endif %}
     {% endif %}
 
+    {% comment %} display result of submitted student_answer {% endcomment %}
     <ol>
         {% for student_answer in student_answer_list reversed %}
             <li><label>{{ student_answer }}</label><br>
